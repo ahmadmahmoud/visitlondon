@@ -3,10 +3,12 @@ var sass = require("gulp-sass");
 var browserSync = require("browser-sync");
 var reload = browserSync.reload;
 var prefix = require("gulp-autoprefixer");
+var clean = require("gulp-clean");
 
 var SourePath = {
   sassPath: "src/scss/*.scss",
-  htmlSource: "src/*.html"
+  htmlSource: "src/*.html",
+  jsSource: "src/js/**"
 };
 
 var AppPath = {
@@ -23,7 +25,23 @@ gulp.task("sass", function() {
     .pipe(gulp.dest(AppPath.css));
 });
 
-gulp.task("copy", function() {
+gulp.task("clean-html", function() {
+  return gulp
+    .src(AppPath.root + "/*.html", { read: false, force: true })
+    .pipe(clean());
+});
+
+gulp.task("clean-scripts", function() {
+  return gulp
+    .src(AppPath.js + "/*.js", { read: false, force: true })
+    .pipe(clean());
+});
+
+gulp.task("scripts", ["clean-scripts"], function() {
+  gulp.src(SourePath.jsSource).pipe(gulp.dest(AppPath.js));
+});
+
+gulp.task("copy", ["clean-html"], function() {
   gulp.src(SourePath.htmlSource).pipe(gulp.dest(AppPath.root));
 });
 
@@ -38,9 +56,14 @@ gulp.task("serve", ["sass"], function() {
   );
 });
 
-gulp.task("watch", ["sass", "serve", "copy"], function() {
-  gulp.watch([SourePath.sassPath], ["sass"]);
-  gulp.watch([SourePath.htmlSource], ["copy"]);
-});
+gulp.task(
+  "watch",
+  ["sass", "serve", "copy", "clean-html", "clean-scripts", "scripts"],
+  function() {
+    gulp.watch([SourePath.sassPath], ["sass"]);
+    gulp.watch([SourePath.htmlSource], ["copy"]);
+    gulp.watch([SourePath.jsSource], ["scripts"]);
+  }
+);
 
 gulp.task("default", ["watch"]);
