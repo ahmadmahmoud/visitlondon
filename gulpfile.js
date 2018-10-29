@@ -3,7 +3,9 @@ var sass = require("gulp-sass");
 var browserSync = require("browser-sync");
 var reload = browserSync.reload;
 var prefix = require("gulp-autoprefixer");
+var browserify = require("gulp-browserify");
 var clean = require("gulp-clean");
+var concat = require("gulp-concat");
 
 var SourePath = {
   sassPath: "src/scss/*.scss",
@@ -38,7 +40,11 @@ gulp.task("clean-scripts", function() {
 });
 
 gulp.task("scripts", ["clean-scripts"], function() {
-  gulp.src(SourePath.jsSource).pipe(gulp.dest(AppPath.js));
+  gulp
+    .src(SourePath.jsSource)
+    .pipe(concat("main.js"))
+    .pipe(browserify())
+    .pipe(gulp.dest(AppPath.js));
 });
 
 gulp.task("copy", ["clean-html"], function() {
