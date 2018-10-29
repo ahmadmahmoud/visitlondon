@@ -2,3 +2,7 @@ $red: #ff0000;
 body {
   background-color: $red;
 }
+
+h1 {
+  transition: color 1s ease;
+}
