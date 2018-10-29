@@ -6,6 +6,7 @@ var prefix = require("gulp-autoprefixer");
 var browserify = require("gulp-browserify");
 var clean = require("gulp-clean");
 var concat = require("gulp-concat");
+var merge = require("merge-stream");
 
 var SourePath = {
   sassPath: "src/scss/*.scss",
@@ -20,10 +21,16 @@ var AppPath = {
 };
 
 gulp.task("sass", function() {
-  return gulp
+  var bootstrapCSS = gulp.src(
+    "./node_modules/bootstrap/dist/css/bootstrap.css"
+  );
+  var sassFiles;
+  sassFiles = gulp
     .src(SourePath.sassPath)
     .pipe(prefix("last 2 versions"))
-    .pipe(sass({ outputStyle: "expanded" }).on("error", sass.logError))
+    .pipe(sass({ outputStyle: "expanded" }).on("error", sass.logError));
+  return merge(bootstrapCSS, sassFiles)
+    .pipe(concat("app.css"))
     .pipe(gulp.dest(AppPath.css));
 });
 
