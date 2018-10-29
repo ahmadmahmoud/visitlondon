@@ -1,0 +1,40 @@
+{
+  "gallery": [
+    {
+      "destiny": "London Eye",
+      "image": "http://placehold.it/500x500"
+    },
+    {
+      "destiny": "Tower Bridge",
+      "image": "http://placehold.it/500x500"
+    },
+    {
+      "destiny": "Westminster Abbey",
+      "image": "http://placehold.it/500x500"
+    },
+    {
+      "destiny": "St. Paul Cathedral",
+      "image": "http://placehold.it/500x500"
+    },
+    {
+      "destiny": "Buckingham Palace",
+      "image": "http://placehold.it/500x500"
+    },
+    {
+      "destiny": "Natural History Museum",
+      "image": "http://placehold.it/500x500"
+    },
+    {
+      "destiny": "Big Ben",
+      "image": "http://placehold.it/500x500"
+    },
+    {
+      "destiny": "Westminster Palace",
+      "image": "http://placehold.it/500x500"
+    },
+    {
+      "destiny": "Hyde Park",
+      "image": "http://placehold.it/500x500"
+    }
+  ]
+}

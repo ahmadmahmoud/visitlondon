@@ -7,17 +7,21 @@ var browserify = require("gulp-browserify");
 var clean = require("gulp-clean");
 var concat = require("gulp-concat");
 var merge = require("merge-stream");
+var newer = require("gulp-newer");
+var imagemin = require("gulp-imagemin");
 
 var SourePath = {
   sassPath: "src/scss/*.scss",
   htmlSource: "src/*.html",
-  jsSource: "src/js/**"
+  jsSource: "src/js/**",
+  imgSource: "src/img/**"
 };
 
 var AppPath = {
   root: "app",
   css: "app/css",
-  js: "app/js"
+  js: "app/js",
+  img: "app/img"
 };
 
 gulp.task("sass", function() {
@@ -32,6 +36,14 @@ gulp.task("sass", function() {
   return merge(bootstrapCSS, sassFiles)
     .pipe(concat("app.css"))
     .pipe(gulp.dest(AppPath.css));
+});
+
+gulp.task("images", function() {
+  return gulp
+    .src(SourePath.imgSource)
+    .pipe(newer(AppPath.img))
+    .pipe(imagemin())
+    .pipe(gulp.dest(AppPath.img));
 });
 
 gulp.task("clean-html", function() {
@@ -71,11 +83,12 @@ gulp.task("serve", ["sass"], function() {
 
 gulp.task(
   "watch",
-  ["sass", "serve", "copy", "clean-html", "clean-scripts", "scripts"],
+  ["sass", "serve", "copy", "clean-html", "clean-scripts", "scripts", "images"],
   function() {
     gulp.watch([SourePath.sassPath], ["sass"]);
     gulp.watch([SourePath.htmlSource], ["copy"]);
     gulp.watch([SourePath.jsSource], ["scripts"]);
+    gulp.watch([SourePath.jsSource], ["images"]);
   }
 );
 
