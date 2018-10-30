@@ -9,6 +9,9 @@ var concat = require("gulp-concat");
 var merge = require("merge-stream");
 var newer = require("gulp-newer");
 var imagemin = require("gulp-imagemin");
+var minify = require("gulp-minify");
+var rename = require("gulp-rename");
+var cssmin = require("gulp-cssmin");
 
 var SourePath = {
   sassPath: "src/scss/*.scss",
@@ -66,6 +69,31 @@ gulp.task("scripts", ["clean-scripts"], function() {
     .pipe(gulp.dest(AppPath.js));
 });
 
+gulp.task("minifyjs", function() {
+  gulp
+    .src(SourePath.jsSource)
+    .pipe(concat("main.js"))
+    .pipe(browserify())
+    .pipe(minify())
+    .pipe(gulp.dest(AppPath.js));
+});
+
+gulp.task("minifycss", function() {
+  var bootstrapCSS = gulp.src(
+    "./node_modules/bootstrap/dist/css/bootstrap.css"
+  );
+  var sassFiles;
+  sassFiles = gulp
+    .src(SourePath.sassPath)
+    .pipe(prefix("last 2 versions"))
+    .pipe(sass({ outputStyle: "expanded" }).on("error", sass.logError));
+  return merge(bootstrapCSS, sassFiles)
+    .pipe(concat("app.css"))
+    .pipe(cssmin())
+    .pipe(rename({ suffix: ".min" }))
+    .pipe(gulp.dest(AppPath.css));
+});
+
 gulp.task("copy", ["clean-html"], function() {
   gulp.src(SourePath.htmlSource).pipe(gulp.dest(AppPath.root));
 });
@@ -93,3 +121,5 @@ gulp.task(
 );
 
 gulp.task("default", ["watch"]);
+
+gulp.task("production", ["minifyjs", "minifycss"]);
