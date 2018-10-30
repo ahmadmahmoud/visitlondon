@@ -43,6 +43,9 @@
     "popper.js": "^1.14.4"
   },
   "dependencies": {
-    "gulp-minify": "^3.1.0"
+    "gulp-minify": "^3.1.0",
+    "lodash": "^4.17.11",
+    "minimatch": "^3.0.4",
+    "uglify-js": "^3.4.9"
   }
 }
